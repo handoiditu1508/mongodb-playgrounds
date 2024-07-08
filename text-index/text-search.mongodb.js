@@ -25,3 +25,21 @@ db.stores.find(
   { $text: { $search: "java coffee shop" } },
   { score: { $meta: "textScore" } }
 ).sort( { score: { $meta: "textScore" } } )
+
+// using aggregate
+db.stores.aggregate(
+  [
+    { $match: { $text: { $search: "java coffee shop" } } },
+    { $project: { score: { $meta: "textScore" } } },
+    { $sort: { score: { $meta: "textScore" } } }
+  ]
+)
+
+// using aggregate and include all fields in the document
+db.stores.aggregate(
+  [
+    { $match: { $text: { $search: "java coffee shop" } } },
+    { $set: { score: { $meta: "textScore" } } },
+    { $sort: { score: { $meta: "textScore" } } }
+  ]
+)
